@@ -33,5 +33,7 @@ An Application Development Platform contains unique:
 + KeyVault
 + Azure Container Registry
 + Storage Account
++ Delegated Internal DNS Zone (labs.int.az.company.com)
++ Delegated Public DNS Zone (labs.az.company.com)
 
 These resources are used to serve the various environments deployed within the platform. For instance, containers or charts required by the application environments are all deployed into a single Container Registry.

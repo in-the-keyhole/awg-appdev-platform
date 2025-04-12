@@ -70,7 +70,7 @@ if ($Stage -eq 'all' -or $Stage -eq 'tf') {
         metadata_location = $MetadataLocation
         resource_location = $ResourceLocation
         dns_zone_name = $DnsZoneName
-        int_dns_zone_name = $InternalDnsZoneName
+        internal_dns_zone_name = $InternalDnsZoneName
         vnet_hub_id = $VNetHubId
         vnet_dns_servers = $VNetDnsServers
         vnet_address_prefixes = @( $VnetAddressPrefix )

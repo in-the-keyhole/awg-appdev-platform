@@ -23,7 +23,7 @@ data azurerm_client_config current {
 
 }
 
-resource azurerm_resource_group appdev {
+resource azurerm_resource_group platform {
   name = "rg-${var.default_name}"
   tags = var.default_tags
   location = var.metadata_location

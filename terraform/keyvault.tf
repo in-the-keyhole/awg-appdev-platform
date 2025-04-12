@@ -1,8 +1,8 @@
 # general use key vault for the appdev platform
-resource azurerm_key_vault appdev {
+resource azurerm_key_vault platform {
   name = var.default_name
   tags = var.default_tags
-  resource_group_name = azurerm_resource_group.appdev.name
+  resource_group_name = azurerm_resource_group.platform.name
   location = var.resource_location
   sku_name = "standard"
   tenant_id = data.azurerm_client_config.current.tenant_id
@@ -36,21 +36,21 @@ locals {
 resource azurerm_private_endpoint key_vault {
   for_each = local.key-vault-subresources
 
-  name = "${azurerm_key_vault.appdev.name}-${each.key}-2-${azurerm_virtual_network.appdev.name}"
+  name = "${azurerm_key_vault.platform.name}-${each.key}-2-${azurerm_virtual_network.platform.name}"
   tags = var.default_tags
-  resource_group_name = azurerm_resource_group.appdev.name
-  location = azurerm_virtual_network.appdev.location
+  resource_group_name = azurerm_resource_group.platform.name
+  location = azurerm_virtual_network.platform.location
   subnet_id = azurerm_subnet.private.id
 
   private_service_connection {
-    name = "${azurerm_key_vault.appdev.name}-${each.key}-2-${azurerm_virtual_network.appdev.name}"
-    private_connection_resource_id = azurerm_key_vault.appdev.id
+    name = "${azurerm_key_vault.platform.name}-${each.key}-2-${azurerm_virtual_network.platform.name}"
+    private_connection_resource_id = azurerm_key_vault.platform.id
     subresource_names = [each.key]
     is_manual_connection = false
   }
 
   private_dns_zone_group {
-    name = "${azurerm_key_vault.appdev.name}-${each.key}-2-hub"
+    name = "${azurerm_key_vault.platform.name}-${each.key}-2-hub"
     private_dns_zone_ids = [
       "${var.privatelink_zone_resource_group_id}/providers/Microsoft.Network/privateDnsZones/${each.value}"
     ]

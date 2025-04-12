@@ -1,8 +1,8 @@
 # general use container registry for the appdev platform
-resource azurerm_container_registry appdev {
+resource azurerm_container_registry platform {
   name = replace(var.default_name, "-", "")
   tags = var.default_tags
-  resource_group_name = azurerm_resource_group.appdev.name
+  resource_group_name = azurerm_resource_group.platform.name
   location = var.resource_location
   sku = "Premium"
   admin_enabled = false
@@ -12,7 +12,6 @@ resource azurerm_container_registry appdev {
     prevent_destroy = true
   }
 }
-
 
 locals {
   container-registry-subresources = {
@@ -24,21 +23,21 @@ locals {
 resource azurerm_private_endpoint container_registry {
   for_each = local.container-registry-subresources
 
-  name = "${azurerm_container_registry.appdev.name}-${each.key}-2-${azurerm_virtual_network.appdev.name}"
+  name = "${azurerm_container_registry.platform.name}-${each.key}-2-${azurerm_virtual_network.platform.name}"
   tags = var.default_tags
-  resource_group_name = azurerm_resource_group.appdev.name
-  location = azurerm_virtual_network.appdev.location
+  resource_group_name = azurerm_resource_group.platform.name
+  location = azurerm_virtual_network.platform.location
   subnet_id = azurerm_subnet.private.id
 
   private_service_connection {
-    name = "${azurerm_container_registry.appdev.name}-${each.key}-2-${azurerm_virtual_network.appdev.name}"
-    private_connection_resource_id = azurerm_container_registry.appdev.id
+    name = "${azurerm_container_registry.platform.name}-${each.key}-2-${azurerm_virtual_network.platform.name}"
+    private_connection_resource_id = azurerm_container_registry.platform.id
     subresource_names = [each.key]
     is_manual_connection = false
   }
 
   private_dns_zone_group {
-    name = "${azurerm_container_registry.appdev.name}-${each.key}-2-hub"
+    name = "${azurerm_container_registry.platform.name}-${each.key}-2-hub"
     private_dns_zone_ids = [
       "${var.privatelink_zone_resource_group_id}/providers/Microsoft.Network/privateDnsZones/${each.value}"
     ]

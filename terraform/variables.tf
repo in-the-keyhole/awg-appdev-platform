@@ -29,7 +29,7 @@ variable dns_zone_name {
   type = string
 }
 
-variable int_dns_zone_name {
+variable internal_dns_zone_name {
   type = string
 }
 

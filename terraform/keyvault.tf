@@ -11,10 +11,13 @@ resource azurerm_key_vault appdev {
   enabled_for_deployment = true
   enabled_for_disk_encryption = true
   enabled_for_template_deployment = true
+  access_policy = []
 
   network_acls {
     default_action = "Deny"
     bypass = "AzureServices"
+    ip_rules = []
+    virtual_network_subnet_ids = []
   }
 
   lifecycle {

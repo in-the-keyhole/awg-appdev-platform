@@ -23,16 +23,16 @@ resource azurerm_virtual_network appdev {
   }
 }
 
-# peer the private spoke virtual network with the hub virtual network
-resource azurerm_virtual_network_peering hub {
-  name = "${var.default_name}-2-hub"
-  resource_group_name = azurerm_resource_group.appdev.name
-  virtual_network_name = azurerm_virtual_network.appdev.name
-  remote_virtual_network_id = var.vnet_hub_id
-  allow_virtual_network_access = true
-  allow_forwarded_traffic = true
-  allow_gateway_transit = true
-}
+# # peer the private spoke virtual network with the hub virtual network
+# resource azurerm_virtual_network_peering hub {
+#   name = "${var.default_name}-2-hub"
+#   resource_group_name = azurerm_resource_group.appdev.name
+#   virtual_network_name = azurerm_virtual_network.appdev.name
+#   remote_virtual_network_id = var.vnet_hub_id
+#   allow_virtual_network_access = true
+#   allow_forwarded_traffic = true
+#   allow_gateway_transit = false
+# }
 
 # default subnet
 resource azurerm_subnet default {
@@ -70,6 +70,10 @@ resource azurerm_private_dns_zone_virtual_network_link int {
   private_dns_zone_name = azurerm_private_dns_zone.int.name
   virtual_network_id = azurerm_virtual_network.appdev.id
 
+  lifecycle {
+    ignore_changes = [ tags ]
+  }
+  
   depends_on = [ 
     azurerm_private_dns_zone.int
   ]

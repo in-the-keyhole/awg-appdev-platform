@@ -9,19 +9,27 @@ terraform {
       version = "~>2.3"
     }
   }
+  backend azurerm {
+    
+  }
 }
 
-provider "azurerm" {
+provider azurerm {
   features {}
   subscription_id = var.subscription_id
 }
 
-data "azurerm_client_config" "current" {
+data azurerm_client_config current {
 
 }
 
-resource "azurerm_resource_group" "appdev" {
+resource azurerm_resource_group appdev {
   name = "rg-${var.default_name}"
   tags = var.default_tags
   location = var.metadata_location
+
+  lifecycle {
+    ignore_changes = [ tags ]
+    prevent_destroy = true
+  }
 }

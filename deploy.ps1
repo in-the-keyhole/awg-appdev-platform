@@ -8,11 +8,11 @@ param(
     [ValidateSet('all', 'bicep', 'tf')]
     [string]$Stage = 'all',
 
-    [string]$TfStateResourceGroupName = "tfstate",
-    [string]$TfStateStorageAccountName = "awgapptfstate",
+    [Parameter(Mandatory)][string]$TfStateResourceGroupName,
+    [Parameter(Mandatory)][string]$TfStateStorageAccountName,
 
-    [string]$DefaultName = 'awg-appdev',
-    [string]$ReleaseName = '1.0.0',
+    [Parameter(Mandatory)][string]$DefaultName,
+    [Parameter(Mandatory)][string]$ReleaseName,
     [hashtable]$DefaultTags = @{},
     
     [Parameter(Mandatory)][string]$MetadataLocation,
@@ -22,11 +22,12 @@ param(
     [Parameter(Mandatory)][string]$InternalDnsZoneName,
 
     [Parameter(Mandatory)][string]$VnetHubId,
+    [Parameter(Mandatory)][string[]]$VnetDnsServers,
     [Parameter(Mandatory)][string]$VnetAddressPrefix,
     [Parameter(Mandatory)][string]$DefaultVnetSubnetAddressPrefix,
     [Parameter(Mandatory)][string]$PrivateVnetSubnetAddressPrefix,
-    
-    [Parameter(Mandatory)][string]$AksVnetSubnetAddressPrefix
+
+    [Parameter(Mandatory)][string]$PrivateLinkZoneResourceGroupId
 )
 
 $ErrorActionPreference = "Stop"
@@ -42,17 +43,15 @@ if (!$SubscriptionId) {
 
 if ($Stage -eq 'all' -or $Stage -eq 'bicep') {
     # create tfstate resource group
-    az group create -l $MetadataLocation -n rg-$DefaultName-tfstate `
+    az group create -l $MetadataLocation -n $TfStateResourceGroupName `
     ; if ($LASTEXITCODE -ne 0) { throw $LASTEXITCODE }
 
     # use bicep for initial tfstate deployment
     az deployment group create `
-        --resource-group rg-$DefaultName-tfstate `
+        --resource-group $TfStateResourceGroupName `
         --template-file tfstate.bicep `
-        --parameters defaultName="$DefaultName" `
-        --parameters releaseName="$ReleaseName" `
-        --parameters metadataLocation="$MetadataLocation" `
         --parameters resourceLocation="$ResourceLocation" `
+        --parameters storageAccountName="$TfStateStorageAccountName" `
         ; if ($LASTEXITCODE -ne 0) { throw $LASTEXITCODE }
 }
 
@@ -73,27 +72,30 @@ if ($Stage -eq 'all' -or $Stage -eq 'tf') {
         dns_zone_name = $DnsZoneName
         int_dns_zone_name = $InternalDnsZoneName
         vnet_hub_id = $VNetHubId
+        vnet_dns_servers = $VNetDnsServers
         vnet_address_prefixes = @( $VnetAddressPrefix )
         default_vnet_subnet_address_prefixes = @( $DefaultVnetSubnetAddressPrefix )
         private_vnet_subnet_address_prefixes = @( $PrivateVnetSubnetAddressPrefix )
-        aks_vnet_subnet_address_prefixes = @( $AksVnetSubnetAddressPrefix )
-    } | ConvertTo-Json | Out-File .tmp/$DefaultName.tfvars.json
+        privatelink_zone_resource_group_id = $PrivateLinkZoneResourceGroupId
+    } | ConvertTo-Json | Out-File .tmp/${DefaultName}.tfvars.json
 
     Push-Location .\terraform
 
     try {
         # configure terraform against target environment
         terraform init -reconfigure `
-            -backend-config "subscription_id=$SubscriptionId" `
-            -backend-config "resource_group_name=$TfStateResourceGroupName" `
-            -backend-config "storage_account_name=$TfStateStorageAccountName" `
+            -backend-config "subscription_id=${SubscriptionId}" `
+            -backend-config "resource_group_name=${TfStateResourceGroupName}" `
+            -backend-config "storage_account_name=${TfStateStorageAccountName}" `
             -backend-config "container_name=tfstate" `
-            -backend-config "key=${DefaultName}.tfstate"; if ($LASTEXITCODE -ne 0) { throw $LASTEXITCODE }
+            -backend-config "key=${DefaultName}.tfstate" `
+            ; if ($LASTEXITCODE -ne 0) { throw $LASTEXITCODE }
 
         # apply terraform against target environment
         terraform apply `
-            -var-file="../.tmp/$DefaultName.tfvars.json" `
-            -auto-approve; if ($LASTEXITCODE -ne 0) { throw $LASTEXITCODE }
+            -var-file="../.tmp/${DefaultName}.tfvars.json" `
+            -auto-approve `
+            ; if ($LASTEXITCODE -ne 0) { throw $LASTEXITCODE }
 
     } finally {
         Pop-Location

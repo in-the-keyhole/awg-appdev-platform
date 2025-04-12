@@ -1,6 +1,6 @@
 # AWG Application Development Platform
 
-The AWG AppDev Platform is a reusable deployment artifact that is to be used as the base of a category of AppDev environments. Within on Platform, multiple Environments can be created.
+The AWG AppDev Platform is a reusable deployment artifact that is to be used as the base of a category of AppDev environments. Within one Platform, multiple Environments can be created.
 
 One common pattern where this might make sense is in combining pre-prod environments:
 

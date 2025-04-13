@@ -21,13 +21,16 @@ param(
     [Parameter(Mandatory)][string]$DnsZoneName,
     [Parameter(Mandatory)][string]$InternalDnsZoneName,
 
-    [Parameter(Mandatory)][string]$VnetHubId,
     [Parameter(Mandatory)][string[]]$VnetDnsServers,
     [Parameter(Mandatory)][string]$VnetAddressPrefix,
     [Parameter(Mandatory)][string]$DefaultVnetSubnetAddressPrefix,
     [Parameter(Mandatory)][string]$PrivateVnetSubnetAddressPrefix,
+    [Parameter(Mandatory)][string[]]$DnsVNetSubnetAddressPrefix,
 
-    [Parameter(Mandatory)][string]$PrivateLinkZoneResourceGroupId
+    [Parameter(Mandatory)][string]$HubVnetId,
+    [Parameter(Mandatory)][string]$PrivateLinkZoneResourceGroupId,
+    [Parameter(Mandatory)][string[]]$DnsResolverAddresses
+
 )
 
 $ErrorActionPreference = "Stop"
@@ -71,12 +74,14 @@ if ($Stage -eq 'all' -or $Stage -eq 'tf') {
         resource_location = $ResourceLocation
         dns_zone_name = $DnsZoneName
         internal_dns_zone_name = $InternalDnsZoneName
-        vnet_hub_id = $VNetHubId
-        vnet_dns_servers = $VNetDnsServers
+        vnet_dns_servers = $VnetDnsServers
         vnet_address_prefixes = @( $VnetAddressPrefix )
         default_vnet_subnet_address_prefixes = @( $DefaultVnetSubnetAddressPrefix )
         private_vnet_subnet_address_prefixes = @( $PrivateVnetSubnetAddressPrefix )
+        dns_vnet_subnet_address_prefixes = @( $DnsVNetSubnetAddressPrefix )
+        hub_vnet_id = $HubVnetId
         privatelink_zone_resource_group_id = $PrivateLinkZoneResourceGroupId
+        dns_resolver_addresses = $DnsResolverAddresses
     } | ConvertTo-Json | Out-File .tmp/${DefaultName}.tfvars.json
 
     Push-Location .\terraform

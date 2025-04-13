@@ -33,8 +33,18 @@ variable internal_dns_zone_name {
   type = string
 }
 
-variable vnet_hub_id {
+variable hub_vnet_id {
+  description = "ID of the VNet in the hub subscription"
   type = string
+}
+
+variable privatelink_zone_resource_group_id {
+  description = "ID of the resource group of the hub that holds the privatelink zones"
+  type = string
+}
+
+variable dns_resolver_addresses {
+  type = list(string)
 }
 
 variable vnet_dns_servers {
@@ -53,7 +63,6 @@ variable private_vnet_subnet_address_prefixes {
   type = list(string)
 }
 
-variable privatelink_zone_resource_group_id {
-  description = "ID of the resource group of the hub that holds the privatelink zones"
-  type = string
+variable dns_vnet_subnet_address_prefixes {
+  type = list(string)
 }

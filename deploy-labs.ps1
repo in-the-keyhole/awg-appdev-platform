@@ -20,9 +20,11 @@ param(
     -ResourceLocation "southcentralus" `
     -DnsZoneName "labs.appdev.az.awginc.com" `
     -InternalDnsZoneName "labs.appdev.az.int.awginc.com" `
-    -VnetHubId "/subscriptions/6190d2d3-f65d-4f7a-939e-ad9829c27fd5/resourceGroups/rg-awg-hub/providers/Microsoft.Network/virtualNetworks/awg-hub" `
-    -VnetDnsServers @( "10.223.254.4" ) `
+    -DnsResolverAddresses @( "10.224.254.4", "10.224.254.5" ) `
+    -VnetDnsServers @( "10.223.254.4", "10.223.254.5" ) `
     -VnetAddressPrefix "10.224.0.0/16" `
     -DefaultVnetSubnetAddressPrefix "10.224.0.0/24" `
     -PrivateVnetSubnetAddressPrefix "10.224.1.0/24" `
-    -PrivateLinkZoneResourceGroupId "/subscriptions/6190d2d3-f65d-4f7a-939e-ad9829c27fd5/resourceGroups/rg-awg-hub"
+    -DnsVNetSubnetAddressPrefix "10.224.254.0/29" `
+    -HubVNetId "/subscriptions/6190d2d3-f65d-4f7a-939e-ad9829c27fd5/resourceGroups/rg-awg-hub/providers/Microsoft.Network/virtualNetworks/awg-hub" `
+    -PrivateLinkZoneResourceGroupId "/subscriptions/6190d2d3-f65d-4f7a-939e-ad9829c27fd5/resourceGroups/rg-awg-hub" `

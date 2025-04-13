@@ -1,4 +1,4 @@
-# general use container registry for the appdev platform
+# container registry for the appdev platform
 resource azurerm_container_registry platform {
   name = replace(var.default_name, "-", "")
   tags = var.default_tags
@@ -13,13 +13,20 @@ resource azurerm_container_registry platform {
   }
 }
 
+# grant ourselves push permissions
+resource azurerm_role_assignment self_acr_push {
+  role_definition_name = "AcrPush"
+  scope = azurerm_container_registry.platform.id
+  principal_id = data.azurerm_client_config.current.object_id
+}
+
 locals {
   container-registry-subresources = {
     "registry" = "privatelink.azurecr.io"
   }
 }
 
-# expose each service of the general use container registry to the private VNet
+# expose each service of the container registry to the private VNet
 resource azurerm_private_endpoint container_registry {
   for_each = local.container-registry-subresources
 

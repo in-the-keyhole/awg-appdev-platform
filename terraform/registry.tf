@@ -6,6 +6,8 @@ resource azurerm_container_registry platform {
   location = var.resource_location
   sku = "Premium"
   admin_enabled = false
+  anonymous_pull_enabled = true
+  public_network_access_enabled = true
 
   lifecycle {
     ignore_changes = [ tags ]

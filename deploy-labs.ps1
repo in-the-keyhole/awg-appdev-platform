@@ -18,6 +18,7 @@ param(
     -DefaultTags @{} `
     -MetadataLocation "northcentralus" `
     -ResourceLocation "southcentralus" `
+    -HubSubscriptionId "6190d2d3-f65d-4f7a-939e-ad9829c27fd5" `
     -DnsZoneName "labs.appdev.az.awginc.com" `
     -InternalDnsZoneName "labs.appdev.az.int.awginc.com" `
     -DnsResolverAddresses @( "10.224.254.4", "10.224.254.5" ) `

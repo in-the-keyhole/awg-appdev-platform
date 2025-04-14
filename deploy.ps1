@@ -18,6 +18,7 @@ param(
     [Parameter(Mandatory)][string]$MetadataLocation,
     [Parameter(Mandatory)][string]$ResourceLocation,
 
+    [Parameter(Mandatory)][string]$HubSubscriptionId,
     [Parameter(Mandatory)][string]$DnsZoneName,
     [Parameter(Mandatory)][string]$InternalDnsZoneName,
 
@@ -72,6 +73,7 @@ if ($Stage -eq 'all' -or $Stage -eq 'tf') {
         default_tags = $DefaultTags
         metadata_location = $MetadataLocation
         resource_location = $ResourceLocation
+        hub_subscription_id = $HubSubscriptionId
         dns_zone_name = $DnsZoneName
         internal_dns_zone_name = $InternalDnsZoneName
         vnet_dns_servers = $VnetDnsServers

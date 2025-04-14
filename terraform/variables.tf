@@ -25,6 +25,10 @@ variable resource_location {
   description = "Location of other resource items."
 }
 
+variable hub_subscription_id {
+  type = string
+}
+
 variable dns_zone_name {
   type = string
 }

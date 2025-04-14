@@ -15,8 +15,18 @@ terraform {
 }
 
 provider azurerm {
-  features {}
   subscription_id = var.subscription_id
+  features {}
+}
+
+provider azapi {
+  subscription_id = var.subscription_id
+}
+
+provider azurerm {
+  alias = "hub"
+  subscription_id = var.hub_subscription_id
+  features {}
 }
 
 data azurerm_client_config current {

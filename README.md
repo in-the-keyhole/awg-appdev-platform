@@ -33,8 +33,10 @@ An Application Development Platform contains unique:
 + KeyVault
 + Azure Container Registry
 + Storage Account
-+ Delegated Internal DNS Zone (labs.int.az.company.com)
++ Delegated Internal DNS Zone (labs.az.int.company.com)
 + Delegated Public DNS Zone (labs.az.company.com)
++ DNS Zone Resolver Availability Set
+  + Two Ubuntu Minimal virtual machines which answer forwarded DNS requests against Microsoft DNS. These resolvers exist to answer requests from the Hub network for names defined in private zones of the Platform.
 
 These resources are used to serve the various environments deployed within the platform. For instance, containers or charts required by the application environments are all deployed into a single Container Registry.
 
@@ -59,3 +61,10 @@ Deployment is driven by a PowerShell script named `deploy.ps1`. Arguments passed
 | DefaultVnetSubnetAddressPrefix    | Address prefix of the 'default' subnet.
 | PrivateVnetSubnetAddressPrefix    | Address prefix of the 'private' subnet, into which private endpoints will be emitted.
 | PrivateLinkZoneResourceGroupId    | Full ARM ID of the ResourceGroup hosting the privatelink zones for delegation.
+
+# Requirements
+
++ A Hub network, given by ID.
++ Azure Policy in place that configures PrivateDnsZoneGroup settings for Private Endpoints.
++ Entries in the Hub network DNS zone to delegate authoritative DNS zones for this Platform instance to the Platform Resolvers.
++ Entries in the Hub network DNS zone to forward DNS zones for this Platform instance to the Platform Resolvers.

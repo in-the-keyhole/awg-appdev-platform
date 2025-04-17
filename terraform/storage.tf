@@ -16,14 +16,14 @@ resource azurerm_storage_account platform {
 }
 
 locals {
-  storage-subresources = {
+  storage_subresources = {
     "blob" = "privatelink.blob.core.windows.net",
   }
 }
 
 # expose each service of the general use storage account to the private VNet
 resource azurerm_private_endpoint storage_account {
-  for_each = local.storage-subresources
+  for_each = local.storage_subresources
 
   name = "${azurerm_storage_account.platform.name}-${each.key}-2-${azurerm_virtual_network.platform.name}"
   tags = var.default_tags

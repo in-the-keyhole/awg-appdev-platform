@@ -13,7 +13,6 @@ One common pattern where this might make sense is in combining pre-prod environm
 
 In an example like the above two Azure subscriptions are used, with one AppDev Platform instance per, to segment pre-production from production. Multiple AppDev environments are deployed into the Labs platform.
 
-
 + AppDevPlat #1 (dev)
     + AppDevEnv #1 (dev1)
     + AppDevEnv #2 (dev2)
@@ -25,18 +24,26 @@ In an example like the above two Azure subscriptions are used, with one AppDev P
 + AppDevPlat #4
     + AppDevEnv #6
 
-In an example like the above, four Azure subscriptions are used to separate various types of pre-production environments: dev, sit and uat, but multiple environments exist in each.
+In an example like the above, four Azure subscriptions each with its own Platform are used to separate various types of pre-production environments: dev, sit and uat, but multiple environments exist in each.
 
 An Application Development Platform contains unique:
 
 + Virtual Network
-+ KeyVault
-+ Azure Container Registry
+  + default subnet
+  + private subnet: Azure Private Endpoints
+  + An instance of the AWG AppDev Environment will deploy at least an additional subnet for AKS
++ KeyVault: Used to hold keys that relate not to specific applications or environments, but to the Platform as a whole.
++ Azure Container Registry: Shared container registry for usage by applications eventually deployed within Environments.
 + Storage Account
 + Delegated Internal DNS Zone (labs.az.int.company.com)
+  The Hub's network will need to forward resolution for this domain name to the DNS Resolvers specified below.
 + Delegated Public DNS Zone (labs.az.company.com)
+  The Hub's DNS will need to have NS records created for this sub-domain.
 + DNS Zone Resolver Availability Set
   + Two Ubuntu Minimal virtual machines which answer forwarded DNS requests against Microsoft DNS. These resolvers exist to answer requests from the Hub network for names defined in private zones of the Platform.
+  + Azure Private DNS Resolver exists as an option, but the code is currently built as above due to costing.
++ Intermediate Certificate Authority from AWG Root CA
+  + Currently evaluating options here. Smallstep.
 
 These resources are used to serve the various environments deployed within the platform. For instance, containers or charts required by the application environments are all deployed into a single Container Registry.
 

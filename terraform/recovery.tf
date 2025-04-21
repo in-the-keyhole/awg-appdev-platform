@@ -41,13 +41,6 @@ resource azurerm_private_endpoint recovery_services_vault {
     is_manual_connection = false
   }
 
-  private_dns_zone_group {
-    name = "${azurerm_recovery_services_vault.platform.name}-${each.key}-2-hub"
-    private_dns_zone_ids = [
-      "${var.privatelink_zone_resource_group_id}/providers/Microsoft.Network/privateDnsZones/${each.value}"
-    ]
-  }
-
   lifecycle {
     ignore_changes = [tags]
   }

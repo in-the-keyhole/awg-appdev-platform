@@ -8,7 +8,10 @@ resource azurerm_recovery_services_vault platform {
   public_network_access_enabled = false
   cross_region_restore_enabled = true
 
-  
+
+  lifecycle {
+    ignore_changes = [tags]
+  }
 }
 
 locals {
@@ -42,6 +45,6 @@ resource azurerm_private_endpoint recovery_services_vault {
   }
 
   lifecycle {
-    ignore_changes = [tags]
+    ignore_changes = [tags, private_dns_zone_group]
   }
 }

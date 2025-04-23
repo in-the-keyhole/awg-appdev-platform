@@ -4,6 +4,7 @@ resource azurerm_virtual_network platform {
   tags = var.default_tags
   resource_group_name = azurerm_resource_group.platform.name
   location = var.resource_location
+
   address_space = var.vnet_address_prefixes
   dns_servers = var.vnet_dns_servers
 
@@ -44,10 +45,34 @@ resource azurerm_subnet private {
   private_link_service_network_policies_enabled = true
 }
 
-# subnet for ACI DNS resolver
+# subnet for DNS resolver
 resource azurerm_subnet dns {
   name = "dns"
   resource_group_name = azurerm_resource_group.platform.name
   virtual_network_name = azurerm_virtual_network.platform.name
   address_prefixes = var.dns_vnet_subnet_address_prefixes
+}
+
+# subnet for ACI DNS resolver
+resource azurerm_subnet aci {
+  name = "aci"
+  resource_group_name = azurerm_resource_group.platform.name
+  virtual_network_name = azurerm_virtual_network.platform.name
+  address_prefixes = var.aci_vnet_subnet_address_prefixes
+
+  service_endpoints = [ 
+    "Microsoft.Storage",
+    "Microsoft.ContainerRegistry"
+  ]
+  
+  delegation {
+    name = "acidelegationservice"
+
+    service_delegation {
+      name = "Microsoft.ContainerInstance/containerGroups"
+      actions = [
+        "Microsoft.Network/virtualNetworks/subnets/action"
+      ]
+    }
+  }
 }

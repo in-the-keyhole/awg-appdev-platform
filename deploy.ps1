@@ -19,14 +19,21 @@ param(
     [Parameter(Mandatory)][string]$ResourceLocation,
 
     [Parameter(Mandatory)][string]$HubSubscriptionId,
+
     [Parameter(Mandatory)][string]$DnsZoneName,
     [Parameter(Mandatory)][string]$InternalDnsZoneName,
-
+    
     [Parameter(Mandatory)][string[]]$VnetDnsServers,
     [Parameter(Mandatory)][string]$VnetAddressPrefix,
     [Parameter(Mandatory)][string]$DefaultVnetSubnetAddressPrefix,
     [Parameter(Mandatory)][string]$PrivateVnetSubnetAddressPrefix,
     [Parameter(Mandatory)][string[]]$DnsVNetSubnetAddressPrefix,
+    [Parameter(Mandatory)][string[]]$AciVNetSubnetAddressPrefix,
+
+    [Parameter(Mandatory)][string]$StepCaToken,
+    [Parameter(Mandatory)][string]$StepCaUuid,
+    [Parameter(Mandatory)][string]$StepCaProvisionerName,
+    [Parameter(Mandatory)][string]$StepCaProvisionerPassword,
 
     [Parameter(Mandatory)][string]$HubVnetId,
     [Parameter(Mandatory)][string]$PrivateLinkZoneResourceGroupId,
@@ -81,6 +88,11 @@ if ($Stage -eq 'all' -or $Stage -eq 'tf') {
         default_vnet_subnet_address_prefixes = @( $DefaultVnetSubnetAddressPrefix )
         private_vnet_subnet_address_prefixes = @( $PrivateVnetSubnetAddressPrefix )
         dns_vnet_subnet_address_prefixes = @( $DnsVNetSubnetAddressPrefix )
+        aci_vnet_subnet_address_prefixes = @( $AciVNetSubnetAddressPrefix )
+        stepca_token = $StepCaToken
+        stepca_uuid = $StepCaUuid
+        stepca_provisioner_name = $StepCaProvisionerName
+        stepca_provisioner_password = $StepCaProvisionerPassword
         hub_vnet_id = $HubVnetId
         privatelink_zone_resource_group_id = $PrivateLinkZoneResourceGroupId
         dns_resolver_addresses = $DnsResolverAddresses

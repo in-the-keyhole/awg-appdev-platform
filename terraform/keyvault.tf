@@ -50,6 +50,12 @@ resource azurerm_private_endpoint key_vault {
   }
 
   lifecycle {
-    ignore_changes = [tags]
+    ignore_changes = [tags, private_dns_zone_group]
   }
+}
+
+resource azurerm_role_assignment key_vault_admin {
+  role_definition_name = "Key Vault Administrator"
+  scope = azurerm_key_vault.platform.id
+  principal_id = data.azurerm_client_config.current.object_id
 }

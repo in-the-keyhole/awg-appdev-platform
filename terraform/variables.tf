@@ -37,6 +37,22 @@ variable internal_dns_zone_name {
   type = string
 }
 
+variable stepca_token {
+  type = string
+}
+
+variable stepca_uuid {
+  type = string
+}
+
+variable stepca_provisioner_name {
+  type = string
+}
+
+variable stepca_provisioner_password { 
+  type = string
+}
+
 variable hub_vnet_id {
   description = "ID of the VNet in the hub subscription"
   type = string
@@ -68,5 +84,9 @@ variable private_vnet_subnet_address_prefixes {
 }
 
 variable dns_vnet_subnet_address_prefixes {
+  type = list(string)
+}
+
+variable aci_vnet_subnet_address_prefixes {
   type = list(string)
 }

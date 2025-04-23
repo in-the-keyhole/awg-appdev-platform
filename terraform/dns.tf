@@ -27,6 +27,7 @@ resource azurerm_private_dns_zone_virtual_network_link internal {
   resource_group_name = azurerm_resource_group.platform.name
   private_dns_zone_name = azurerm_private_dns_zone.internal.name
   virtual_network_id = azurerm_virtual_network.platform.id
+  registration_enabled = true
 
   lifecycle {
     ignore_changes = [ tags ]
@@ -80,15 +81,13 @@ resource azurerm_private_dns_zone_virtual_network_link privatelink {
 }
 
 module dns_resolver {
-  source = "github.com/in-the-keyhole/awg-appdev-modules//terraform/dns-resolver?ref=main"
+  source = "../../awg-appdev-modules/terraform/dns-resolver"
   name = "${var.default_name}"
   tags = var.default_tags
   resource_group = azurerm_resource_group.platform
   location = var.resource_location
   subnet = azurerm_subnet.dns
+  admin_username = "sysadmin"
+  admin_password = base64decode("SjY4TnhTOUcyUXhHczBHNyE=")
   addresses = var.dns_resolver_addresses
-}
-
-output dns_resolver_password {
-  value = nonsensitive(module.dns_resolver.password)
 }

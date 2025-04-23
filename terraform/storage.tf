@@ -18,6 +18,7 @@ resource azurerm_storage_account platform {
 locals {
   storage_subresources = {
     "blob" = "privatelink.blob.core.windows.net",
+    "file" = "privatelink.file.core.windows.net",
   }
 }
 
@@ -39,6 +40,6 @@ resource azurerm_private_endpoint storage_account {
   }
 
   lifecycle {
-    ignore_changes = [tags]
+    ignore_changes = [tags, private_dns_zone_group]
   }
 }

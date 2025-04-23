@@ -42,8 +42,9 @@ An Application Development Platform contains unique:
 + DNS Zone Resolver Availability Set
   + Two Ubuntu Minimal virtual machines which answer forwarded DNS requests against Microsoft DNS. These resolvers exist to answer requests from the Hub network for names defined in private zones of the Platform.
   + Azure Private DNS Resolver exists as an option, but the code is currently built as above due to costing.
-+ Intermediate Certificate Authority from AWG Root CA
-  + Currently evaluating options here. Smallstep.
++ Smallstep Registration Authority
+  + Installation of step-ca in Registration Authority mode with a cloud driven Smallstep Certificate Manager installation. This option appears to be the most convienent: step-ca is installed on a Linux machine, put into RA mode, and paired with Smallstep in the cloud. No security principals exist on premise. However, it requires purchasing CA's slots from Smallstep. These aren't terrible.
+  + Another option might be to run a full step-ca intermediate on-premise. But the RA is stateless which is much easier to deploy and manage.
 
 These resources are used to serve the various environments deployed within the platform. For instance, containers or charts required by the application environments are all deployed into a single Container Registry.
 
@@ -62,16 +63,25 @@ Deployment is driven by a PowerShell script named `deploy.ps1`. Arguments passed
 | ResourceLocation                  | Primary location of Azure resources.
 | DnsZoneName                       | DNS zone name of the delegated public zone. Delegation is not handled.
 | InternalDnsZoneName               | DNS zone name of the delegated private zone.
-| VnetHubId                         | Full ARM ID of the Hub virtual network to peer to.
 | VnetDnsServers                    | List of DNS servers, usually in the hub, to contact for resolution.
 | VnetAddressPrefix                 | Address prefix for the Virtual Network. Must be unique within the peered VNet.
 | DefaultVnetSubnetAddressPrefix    | Address prefix of the 'default' subnet.
 | PrivateVnetSubnetAddressPrefix    | Address prefix of the 'private' subnet, into which private endpoints will be emitted.
+| DnsVnetSubnetAddressPrefix        | Address prefix of the 'dns' subnet, into which Core DNS resolver instances are placed.
+| AciVnetSubnetAddressPrefix        |
+| StepCaToken                       | Bearer token allocated from the StepCA API instance.
+| StepCaUuid                        | UUID of the StepCA instance.
+| StepCaProvisionerName             | Name of the JWK provisioner to bind to.
+| StepCaProvisionerPassword         | Password of the JWK provisioner to bind to.
+| HubVnetId                         | Full ARM ID of the Hub virtual network to peer to.
 | PrivateLinkZoneResourceGroupId    | Full ARM ID of the ResourceGroup hosting the privatelink zones for delegation.
+| DnsResolverAddresses              | Addresses within the 'dns' subnet range which will be used for Core DNS instances.
 
 # Requirements
 
 + A Hub network, given by ID.
-+ Azure Policy in place that configures PrivateDnsZoneGroup settings for Private Endpoints.
++ Azure Policy in place that configures PrivateDnsZoneGroup settings for Private Endpoints to Private DNS Zones which are located in the Hub.
 + Entries in the Hub network DNS zone to delegate authoritative DNS zones for this Platform instance to the Platform Resolvers.
 + Entries in the Hub network DNS zone to forward DNS zones for this Platform instance to the Platform Resolvers.
+* Generation of an subordinate CA for each Platform deployment. Policy could be used to restrict issued names to those domain names within the Platform.
+

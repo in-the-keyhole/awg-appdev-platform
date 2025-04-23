@@ -24,7 +24,7 @@ resource azurerm_role_assignment self_acr_push {
 
 locals {
   container-registry-subresources = {
-    "registry" = "privatelink.azurecr.io"
+    registry = "privatelink.azurecr.io"
   }
 }
 
@@ -46,6 +46,6 @@ resource azurerm_private_endpoint container_registry {
   }
 
   lifecycle {
-    ignore_changes = [tags]
+    ignore_changes = [tags, private_dns_zone_group]
   }
 }

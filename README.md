@@ -86,7 +86,5 @@ Deployment is driven by a PowerShell script named `deploy.ps1`. Arguments passed
 * Generation of an subordinate CA for each Platform deployment. Policy could be used to restrict issued names to those domain names within the Platform.
 
 
-## Diagrams
-https://azurediagrams.com/PDzfsW9f
+https://azurediagrams.com/PDzfsW9fz
 https://azurediagrams.com/pevkOuM6
-

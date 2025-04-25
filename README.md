@@ -85,3 +85,8 @@ Deployment is driven by a PowerShell script named `deploy.ps1`. Arguments passed
 + Entries in the Hub network DNS zone to forward DNS zones for this Platform instance to the Platform Resolvers.
 * Generation of an subordinate CA for each Platform deployment. Policy could be used to restrict issued names to those domain names within the Platform.
 
+
+## Diagrams
+https://azurediagrams.com/PDzfsW9f
+https://azurediagrams.com/pevkOuM6
+

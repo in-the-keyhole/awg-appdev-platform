@@ -8,7 +8,7 @@ data smallstep_provisioner jwk {
 }
 
 locals {
-  stepca_replicas = 2
+  stepca_replicas = 1
 }
 
 module stepca {

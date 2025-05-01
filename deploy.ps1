@@ -17,6 +17,7 @@ param(
     
     [Parameter(Mandatory)][string]$MetadataLocation,
     [Parameter(Mandatory)][string]$ResourceLocation,
+    [Parameter(Mandatory)][string]$RootCaCerts,
 
     [Parameter(Mandatory)][string]$HubSubscriptionId,
 
@@ -30,13 +31,7 @@ param(
     [Parameter(Mandatory)][string[]]$DnsVNetSubnetAddressPrefix,
     [Parameter(Mandatory)][string[]]$AciVNetSubnetAddressPrefix,
 
-    [Parameter(Mandatory)][string]$StepCaToken,
-    [Parameter(Mandatory)][string]$StepCaUuid,
-    [Parameter(Mandatory)][string]$StepCaProvisionerName,
-    [Parameter(Mandatory)][string]$StepCaProvisionerPassword,
-
     [Parameter(Mandatory)][string]$HubVnetId,
-    [Parameter(Mandatory)][string]$PrivateLinkZoneResourceGroupId,
     [Parameter(Mandatory)][string[]]$DnsResolverAddresses
 
 )
@@ -80,6 +75,7 @@ if ($Stage -eq 'all' -or $Stage -eq 'tf') {
         default_tags = $DefaultTags
         metadata_location = $MetadataLocation
         resource_location = $ResourceLocation
+        root_ca_certs = $RootCaCerts
         hub_subscription_id = $HubSubscriptionId
         dns_zone_name = $DnsZoneName
         internal_dns_zone_name = $InternalDnsZoneName
@@ -89,12 +85,7 @@ if ($Stage -eq 'all' -or $Stage -eq 'tf') {
         private_vnet_subnet_address_prefixes = @( $PrivateVnetSubnetAddressPrefix )
         dns_vnet_subnet_address_prefixes = @( $DnsVNetSubnetAddressPrefix )
         aci_vnet_subnet_address_prefixes = @( $AciVNetSubnetAddressPrefix )
-        stepca_token = $StepCaToken
-        stepca_uuid = $StepCaUuid
-        stepca_provisioner_name = $StepCaProvisionerName
-        stepca_provisioner_password = $StepCaProvisionerPassword
         hub_vnet_id = $HubVnetId
-        privatelink_zone_resource_group_id = $PrivateLinkZoneResourceGroupId
         dns_resolver_addresses = $DnsResolverAddresses
     } | ConvertTo-Json | Out-File .tmp/${DefaultName}.tfvars.json
 
@@ -112,6 +103,7 @@ if ($Stage -eq 'all' -or $Stage -eq 'tf') {
 
         # apply terraform against target environment
         terraform apply `
+            -parallelism=1 `
             -var-file="../.tmp/${DefaultName}.tfvars.json" `
             -auto-approve `
             ; if ($LASTEXITCODE -ne 0) { throw $LASTEXITCODE }

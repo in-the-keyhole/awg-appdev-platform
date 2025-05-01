@@ -26,6 +26,7 @@ locals {
 # allows grafana to reach out to prometheus metrics
 resource azurerm_dashboard_grafana_managed_private_endpoint grafana {
   name = local.azurerm_dashboard_grafana_managed_private_endpoint_name
+  tags = var.default_tags
   location = azurerm_virtual_network.platform.location
 
   grafana_id = azurerm_dashboard_grafana.grafana.id
@@ -33,8 +34,11 @@ resource azurerm_dashboard_grafana_managed_private_endpoint grafana {
 
   private_link_resource_id = azurerm_monitor_workspace.platform.id
   private_link_resource_region = azurerm_monitor_workspace.platform.location
-}
 
+  lifecycle {
+    ignore_changes = [ tags ]
+  }
+}
 
 resource azurerm_role_assignment grafana_monitoring_data_reader_role {
   role_definition_name = "Monitoring Data Reader"

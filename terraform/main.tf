@@ -8,10 +8,6 @@ terraform {
       source  = "azure/azapi"
       version = "~>2.3"
     }
-    smallstep = {
-      source = "smallstep/smallstep"
-      version = "0.6.0"
-    }
   }
   backend azurerm {
     
@@ -31,10 +27,6 @@ provider azurerm {
   alias = "hub"
   subscription_id = var.hub_subscription_id
   features {}
-}
-
-provider smallstep {
-  bearer_token = var.stepca_token
 }
 
 data azurerm_client_config current {

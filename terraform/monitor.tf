@@ -54,6 +54,10 @@ resource azurerm_monitor_private_link_scope monitor {
 
   ingestion_access_mode = "PrivateOnly"
   query_access_mode = "PrivateOnly"
+
+  lifecycle {
+    ignore_changes = [tags]
+  }
 }
 
 resource azurerm_private_endpoint monitor_link_scope {
